@@ -3,34 +3,19 @@ from flask import Flask, send_from_directory, request
 
 app = Flask(__name__)
 
-primes = []
-noprimes = []
+messages = []
 
-@app.route("/primes")
-def returnPrimes():
-	global primes
-	return (",").join(primes)
-
-@app.route("/noprimes")
-def returnNoPrimes():
-	global noprimes
-	return (",").join(noprimes)
-	
-@app.route("/getjob")
-def giveJob():
-	return str(random.randint(1, 5000))
-	
-@app.route("/prime")
-def getPrime():
-	global primes
-	primes.append(request.url.split("?number=")[1])
+@app.route("/alive")
+def appendAlive():
+	global messages
+	messages.append(time.time())
 	return ""
 
-@app.route("/noprime")
-def getNoPrime():
-	global noprimes
-	noprimes.append(request.url.split("?number=")[1])
-	return ""
+@app.route("/")
+def showMessages():
+	global messages
+	stat = "{messages: %s, \n number: %s}" % (messages, len(messages))
+	return stat
 
 port = os.getenv('VCAP_APP_PORT', '8080')
 if __name__ == "__main__":
